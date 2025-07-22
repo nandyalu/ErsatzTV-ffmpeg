@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  BUILD_VERSION: 7.1.1
 jobs:
   build_and_push:
     name: Build & Publish
@@ -71,6 +72,7 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            ${{ env.BUILD_VERSION }}
             ${{ matrix.suffix }}
             latest
 
@@ -80,14 +82,15 @@ jobs:
           builder: ${{ steps.docker-buildx.outputs.name }}
           context: .
           file: ./dummy.Dockerfile
+          push: true
           # file: ./${{ matrix.path }}Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
+          # push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.extract-docker-metadata.outputs.tags }}
           labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BASE_IMAGE_TAG=7.1.1
+            BASE_IMAGE_TAG=${{ env.BUILD_VERSION }}
         if: ${{ matrix.name != 'arm64' && matrix.name != 'arm32v7' }}
 
       - name: Build and push
@@ -96,15 +99,16 @@ jobs:
           builder: ${{ steps.docker-buildx.outputs.name }}
           context: .
           file: ./dummy.Dockerfile
+          push: true
           # file: ./${{ matrix.path }}Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
+          # push: ${{ github.ref == 'refs/heads/main' }}
           platforms: 'linux/arm64'
           tags: ${{ steps.extract-docker-metadata.outputs.tags }}
           labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BASE_IMAGE_TAG=7.1.1-arm64
+            BASE_IMAGE_TAG=${{ env.BUILD_VERSION }}-arm64
         if: ${{ matrix.name == 'arm64' }}
 
       - name: Build and push
@@ -113,13 +117,14 @@ jobs:
           builder: ${{ steps.docker-buildx.outputs.name }}
           context: .
           file: ./dummy.Dockerfile
+          push: true
           # file: ./${{ matrix.path }}Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
+          # push: ${{ github.ref == 'refs/heads/main' }}
           platforms: 'linux/arm/v7'
           tags: ${{ steps.extract-docker-metadata.outputs.tags }}
           labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BASE_IMAGE_TAG=7.1.1-arm
+            BASE_IMAGE_TAG=${{ env.BUILD_VERSION }}-arm
         if: ${{ matrix.name == 'arm32v7' }}
