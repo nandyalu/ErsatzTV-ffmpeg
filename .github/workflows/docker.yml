@@ -18,15 +18,15 @@ jobs:
         include:
           - name: base
             path: ''
-            suffix: ''
+            suffix: 'amd64'
             qemu: false
           - name: arm32v7
             path: 'arm32v7.'
-            suffix: '-arm'
+            suffix: 'arm32v7'
             qemu: true
           - name: arm64
             path: 'arm64.'
-            suffix: '-arm64'
+            suffix: 'arm64'
             qemu: true
     steps:
       - name: Checkout
@@ -57,9 +57,9 @@ jobs:
         with:
           # Cache key based on Dockerfile
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ hashFiles('Dockerfile') }}
+          key: ${{ runner.os }}-${{ matrix.suffix }}-docker-${{ hashFiles('Dockerfile') }}
           restore-keys: |
-            ${{ runner.os }}-docker-
+            ${{ runner.os }}-${{ matrix.suffix }}-docker-
 
       - name: Extract Docker metadata
         id: extract-docker-metadata
@@ -71,6 +71,7 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            ${{ matrix.suffix }}
             latest
 
       - name: Build and push
@@ -82,7 +83,7 @@ jobs:
           # file: ./${{ matrix.path }}Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.extract-docker-metadata.outputs.tags }}
-          labels: ${{ steps.extract-docker-metadata.outputs.labels }},"arm64"
+          labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -98,7 +99,7 @@ jobs:
           # file: ./${{ matrix.path }}Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: 'linux/arm64'
-          tags: ${{ steps.extract-docker-metadata.outputs.tags }},"arm64"
+          tags: ${{ steps.extract-docker-metadata.outputs.tags }}
           labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -115,7 +116,7 @@ jobs:
           # file: ./${{ matrix.path }}Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           platforms: 'linux/arm/v7'
-          tags: ${{ steps.extract-docker-metadata.outputs.tags }},"arm32v7"
+          tags: ${{ steps.extract-docker-metadata.outputs.tags }}
           labels: ${{ steps.extract-docker-metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
