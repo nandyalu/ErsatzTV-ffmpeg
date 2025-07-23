@@ -196,7 +196,8 @@ RUN cd /tmp/libass && \
     ./autogen.sh && \
     ./configure \
     --disable-static \
-    --enable-shared && \
+    --enable-shared \
+    --disable-asm && \
     make && \
     make install
 
