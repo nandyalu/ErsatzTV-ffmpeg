@@ -174,13 +174,13 @@ RUN cd /tmp/libgl && \
     build && \
     ninja -C build install && \
     strip -d \
-    /usr/local/lib64/libEGL.so \
-    /usr/local/lib64/libGLdispatch.so \
-    /usr/local/lib64/libGLESv1_CM.so \
-    /usr/local/lib64/libGLESv2.so \
-    /usr/local/lib64/libGL.so \
-    /usr/local/lib64/libGLX.so \
-    /usr/local/lib64/libOpenGL.so
+    /usr/local/lib/libEGL.so \
+    /usr/local/lib/libGLdispatch.so \
+    /usr/local/lib/libGLESv1_CM.so \
+    /usr/local/lib/libGLESv2.so \
+    /usr/local/lib/libGL.so \
+    /usr/local/lib/libGLX.so \
+    /usr/local/lib/libOpenGL.so
 
 # libdrm
 RUN mkdir -p /tmp/libdrm && \
@@ -204,7 +204,7 @@ RUN mkdir -p /tmp/libdovi && \
     /tmp/libdovi
 RUN cd /tmp/libdovi/dolby_vision && \
     cargo cinstall --release && \
-    strip -d /usr/local/lib64/libdovi.so
+    strip -d /usr/local/lib/libdovi.so
 
 # libplacebo
 RUN mkdir -p /tmp/libplacebo && \
@@ -654,7 +654,7 @@ RUN /usr/local/lib/rustlib/uninstall.sh && \
     /usr/local/lib/lib*so* \
     /buildout/usr/local/lib/ && \
     cp -a \
-    /usr/local/lib64/lib*so* \
+    /usr/local/lib/lib*so* \
     /buildout/usr/local/lib/aarch64-linux-gnu/ 2>/dev/null || true && \
     cp -a \
     /usr/local/lib/aarch64-linux-gnu/lib*so* \
