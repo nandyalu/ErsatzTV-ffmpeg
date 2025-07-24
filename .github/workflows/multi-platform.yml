@@ -40,9 +40,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE_NAME }}
-          tags: |
-              type=semver,pattern={{version}},value=${{ env.RELEASE_VERSION }}
-              type=raw,value=latest
 
       - name: Login to container registry
         uses: docker/login-action@v3
@@ -75,7 +72,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.IMAGE_NAME }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           outputs: type=image,push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' }}
