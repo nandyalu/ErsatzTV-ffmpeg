@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/nandyalu/ffmpeg-hwaccel
+  IMAGE_NAME: ghcr.io/nandyalu/ersatztv-ffmpeg
   RELEASE_VERSION: 7.1.1
 
 jobs:
