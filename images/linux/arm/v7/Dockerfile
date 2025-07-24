@@ -151,7 +151,7 @@ RUN cd /tmp/fribidi && \
     ./configure \
     --disable-static \
     --enable-shared && \
-    make -j 1 && \
+    make -j 4 && \
     make install
 
 # kvazaar

@@ -5,7 +5,8 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS devel-base
 
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV MAKEFLAGS="-j4" \
-    PATH="/root/.cargo/bin:${PATH}"
+    PATH="/root/.cargo/bin:${PATH}" \
+    PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig"
 
 ENV AOM=v3.12.0 \
     FDKAAC=2.0.3 \
@@ -327,7 +328,7 @@ RUN cd /tmp/fribidi && \
     ./configure \
     --disable-static \
     --enable-shared && \
-    make -j 1 && \
+    make -j 4 && \
     make install && \
     strip -d /usr/local/lib/libfribidi.so
 
@@ -489,11 +490,13 @@ RUN cd /tmp/vid.stab && \
     cd build && \
     cmake \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DBUILD_SHARED_LIBS=ON \
     -DUSE_OMP=ON \
     .. && \
     make && \
-    make install
+    make install && \
+    ldconfig
 
 # vorbis
 RUN mkdir -p /tmp/vorbis && \
@@ -584,7 +587,13 @@ RUN if [ -z ${FFMPEG_VERSION+x} ]; then \
     curl -Lf \
     https://ffmpeg.org/releases/ffmpeg-${FFMPEG}.tar.bz2 | \
     tar -jx --strip-components=1 -C /tmp/ffmpeg
+
+# Update library cache and verify vidstab installation
+RUN ldconfig && \
+    pkg-config --exists --print-errors vidstab || echo "Warning: vidstab pkg-config not found"
+
 RUN cd /tmp/ffmpeg && \
+    export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig" && \
     ./configure \
     --ld=clang++ \
     --disable-debug \
