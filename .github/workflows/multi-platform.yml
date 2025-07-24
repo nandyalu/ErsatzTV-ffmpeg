@@ -65,10 +65,8 @@ jobs:
           file: ./images/${{ matrix.platform }}/Dockerfile
           cache-from: |
             type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }}
-          # type=gha
           cache-to: |
             type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }},mode=max
-          # type=gha,mode=max
           platforms: ${{ matrix.platform }}
           push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
