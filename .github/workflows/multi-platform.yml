@@ -12,6 +12,7 @@ env:
   IMAGE_NAME: ghcr.io/nandyalu/ersatztv-ffmpeg
   RELEASE_VERSION: 7.1.1
 
+
 jobs:
   build:
     name: Build Docker Images
@@ -47,7 +48,6 @@ jobs:
 
       - name: Login to container registry
         uses: docker/login-action@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
