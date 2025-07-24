@@ -328,7 +328,7 @@ RUN cd /tmp/fribidi && \
     ./configure \
     --disable-static \
     --enable-shared && \
-    make -j 4 && \
+    make -j 1 && \
     make install && \
     strip -d /usr/local/lib/libfribidi.so
 
