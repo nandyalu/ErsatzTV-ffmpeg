@@ -17,11 +17,6 @@ jobs:
     name: Build Docker Images
     runs-on: ${{ matrix.os }}
     if: contains(github.event.head_commit.message, '[no build]') == false
-    permissions:
-      contents: write
-      packages: write
-      attestations: write
-      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -100,11 +95,6 @@ jobs:
   merge:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-      attestations: write
-      id-token: write
     needs:
       - build
     steps:
