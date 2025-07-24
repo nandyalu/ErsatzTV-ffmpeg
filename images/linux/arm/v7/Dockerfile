@@ -14,7 +14,7 @@ ENV AOM=v3.12.0 \
     FRIBIDI=1.0.16 \
     KVAZAAR=2.3.1 \
     LAME=3.100 \
-    LIBASS=0.17.3 \
+    LIBASS=0.17.4 \
     LIBDAV1D=1.5.1 \
     LIBSRT=1.5.4 \
     LIBVIDSTAB=1.1.0 \
@@ -196,7 +196,8 @@ RUN cd /tmp/libass && \
     ./autogen.sh && \
     ./configure \
     --disable-static \
-    --enable-shared && \
+    --enable-shared \
+    --disable-asm && \
     make && \
     make install
 
