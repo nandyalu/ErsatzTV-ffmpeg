@@ -1,4 +1,4 @@
-name: Docker Publish Multi-Platform
+name: Test Docker Publish Multi-Platform
 
 on:
   workflow_dispatch:
@@ -66,12 +66,19 @@ jobs:
         with:
           context: .
           file: ./images/${{ matrix.platform }}/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha
+            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ env.PLATFORM_PAIR }}
+          cache-to: |
+            type=gha,mode=max
+            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ env.PLATFORM_PAIR }},mode=max
           platforms: ${{ matrix.platform }}
           push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.IMAGE_NAME }}
+          target: runtime-base
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
@@ -142,12 +149,19 @@ jobs:
         with:
           context: .
           file: ./images/${{ matrix.platform }}/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha
+            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ env.PLATFORM_PAIR }}
+          cache-to: |
+            type=gha,mode=max
+            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ env.PLATFORM_PAIR }},mode=max
           platforms: ${{ matrix.platform }}
           push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.IMAGE_NAME }}
+          target: runtime-base
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest

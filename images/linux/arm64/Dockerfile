@@ -485,9 +485,13 @@ RUN mkdir -p /tmp/vid.stab && \
     https://github.com/georgmartius/vid.stab/archive/v${LIBVIDSTAB}.tar.gz | \
     tar -zx --strip-components=1 -C /tmp/vid.stab
 RUN cd /tmp/vid.stab && \
-    echo "" > \
-    CMakeModules/FindSSE.cmake && \
-    cmake . && \
+    mkdir -p build && \
+    cd build && \
+    cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DUSE_OMP=ON \
+    .. && \
     make && \
     make install
 
