@@ -70,7 +70,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ env.IMAGE_NAME }}
+          tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           outputs: type=image,push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' }}
