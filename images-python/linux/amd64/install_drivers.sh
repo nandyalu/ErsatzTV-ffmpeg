@@ -15,7 +15,7 @@ install_drivers_debian() {
     # Initialize an array to hold failed packages
     FAILED_PACKAGES=()
     # Core VAAPI libraries (most important for Intel/AMD)
-    apt-get install git cmake pkg-config meson libdrm-dev automake libtool
+    apt-get -yqq install git cmake pkg-config meson libdrm-dev automake libtool
     mkdir -p /tmp/libva
     cd /tmp/libva
     git clone https://github.com/intel/libva.git /tmp/libva
