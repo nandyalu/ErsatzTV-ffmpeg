@@ -19,3 +19,6 @@ FROM python:3.12-slim
 COPY ./install_drivers.sh /tmp/install_drivers.sh
 RUN chmod +x /tmp/install_drivers.sh && \
     /tmp/install_drivers.sh
+
+CMD         ["--help"]
+ENTRYPOINT  ["ffmpeg"]
