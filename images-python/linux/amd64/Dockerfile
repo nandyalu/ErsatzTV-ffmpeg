@@ -8,15 +8,12 @@ ENV MAKEFLAGS="-j4" \
     PATH="/root/.cargo/bin:${PATH}"
 
 # Install ffmpeg using install_ffmpeg.sh script
-COPY ./install_ffmpeg.sh /tmp/install_ffmpeg.sh
+COPY /images-python/linux/amd64/install_ffmpeg.sh /tmp/install_ffmpeg.sh
 RUN chmod +x /tmp/install_ffmpeg.sh && \
     /tmp/install_ffmpeg.sh
 
-# Stage 2 - Final image
-FROM python:3.12-slim
-
 # Install HW Acceleration drivers and libraries
-COPY ./install_drivers.sh /tmp/install_drivers.sh
+COPY /images-python/linux/amd64/install_drivers.sh /tmp/install_drivers.sh
 RUN chmod +x /tmp/install_drivers.sh && \
     /tmp/install_drivers.sh
 
