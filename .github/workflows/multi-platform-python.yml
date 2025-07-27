@@ -63,27 +63,28 @@ jobs:
         with:
           context: .
           file: ./images-python/${{ matrix.platform }}/Dockerfile
-          cache-from: |
-            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }}
-          cache-to: |
-            type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }},mode=max
+          # cache-from: |
+          #   type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }}
+          # cache-to: |
+          #   type=registry,ref=${{ env.IMAGE_NAME }}:buildcache-${{ matrix.pair }},mode=max
           platforms: ${{ matrix.platform }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          # push: ${{ github.ref == 'refs/heads/main' }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.IMAGE_NAME }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-          outputs: type=image,push-by-digest=true,name-canonical=true,push=${{ github.ref == 'refs/heads/main' }}
+          outputs: type=image,push-by-digest=true,name-canonical=true,push=true
+          # ${{ github.ref == 'refs/heads/main' }}
 
       - name: Export digest
-        if: ${{ github.ref == 'refs/heads/main' }}
+        # if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           mkdir -p ${{ runner.temp }}/digests
           digest="${{ steps.build.outputs.digest }}"
           touch "${{ runner.temp }}/digests/${digest#sha256:}"
 
       - name: Upload digest
-        if: ${{ github.ref == 'refs/heads/main' }}
+        # if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/upload-artifact@v4
         with:
           name: digests-${{ matrix.pair }}
@@ -92,7 +93,7 @@ jobs:
           retention-days: 1
   
   merge:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    # if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs:
       - build
